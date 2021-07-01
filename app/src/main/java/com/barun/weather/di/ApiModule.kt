@@ -2,7 +2,7 @@ package com.barun.weather.di
 
 import com.barun.weather.BuildConfig
 import com.barun.weather.data.persistance.WeatherDBRepo
-import com.barun.weather.data.repository.OpenBankRepository
+import com.barun.weather.data.repository.OpenWeatherRepository
 import com.barun.weather.data.repository.OpenWeatherDataApi
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -28,8 +28,8 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideRepo(apiService: OpenWeatherDataApi, database: WeatherDBRepo): OpenBankRepository {
-        return OpenBankRepository(apiService, database)
+    fun provideRepo(apiService: OpenWeatherDataApi, database: WeatherDBRepo): OpenWeatherRepository {
+        return OpenWeatherRepository(apiService, database)
     }
 
     @Provides

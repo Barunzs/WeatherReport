@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.barun.weather.data.repository.OpenBankRepository
+import com.barun.weather.data.repository.OpenWeatherRepository
 import com.barun.weather.data.response.Resource
 import com.barun.weather.data.response.weather.WeatherData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @ExperimentalSerializationApi
 @HiltViewModel
-class DashBoardViewModel @Inject constructor(val repository: OpenBankRepository) : ViewModel() {
+class DashBoardViewModel @Inject constructor(val repository: OpenWeatherRepository) : ViewModel() {
 
     private val TAG = DashBoardViewModel::class.java.simpleName
     private val _weatherResponse: MutableLiveData<Resource<WeatherData>> = MutableLiveData()

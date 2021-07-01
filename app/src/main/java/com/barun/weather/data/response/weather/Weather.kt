@@ -6,7 +6,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Entity
 data class Weather(
     @PrimaryKey()
     @SerialName("id") val id : Int,

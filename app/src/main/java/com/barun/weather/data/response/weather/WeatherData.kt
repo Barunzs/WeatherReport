@@ -1,13 +1,18 @@
 package com.barun.weather.data.response.weather
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.barun.weather.data.persistance.WeatherDataConverter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
 @Serializable
+@Entity
+@TypeConverters(WeatherDataConverter::class)
 data class WeatherData(
-
+    @PrimaryKey
     @SerialName("lat") val lat: Double,
     @SerialName("lon") val lon: Double,
     @SerialName("timezone") val timezone: String,

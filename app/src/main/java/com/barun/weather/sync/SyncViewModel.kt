@@ -6,7 +6,7 @@ import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.barun.weather.data.repository.OpenBankRepository
+import com.barun.weather.data.repository.OpenWeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.serialization.ExperimentalSerializationApi
 import java.util.concurrent.TimeUnit
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @ExperimentalSerializationApi
 @HiltViewModel
 class SyncViewModel @Inject constructor(
-    val repository: OpenBankRepository,
+    val repository: OpenWeatherRepository,
     application: Application
 ) : ViewModel() {
 
