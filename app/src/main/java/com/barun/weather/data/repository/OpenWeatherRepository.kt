@@ -2,8 +2,12 @@ package com.barun.weather.data.repository
 
 import android.util.Log
 import com.barun.weather.data.persistance.WeatherDBRepo
+import com.barun.weather.data.response.Resource
 import com.barun.weather.data.response.weather.WeatherData
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
@@ -24,6 +28,13 @@ class OpenWeatherRepository @Inject constructor(
         dbService.weatherInfoDao.insert(weatherInfo)
     }
 
+    fun getOfflineWeatherInfo(): Flow<Resource.Success<WeatherData>> {
+        return flow {
+            dbService.weatherInfoDao.fetchOfflineWeatherAsFlow().collect {
+                emit(Resource.Success(it))
+            }
+        }
+    }
 
     suspend fun getWeather(
         lat: String,

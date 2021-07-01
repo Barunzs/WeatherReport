@@ -28,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.layout_weather_data.*
 import kotlinx.serialization.ExperimentalSerializationApi
+import java.io.IOException
 import java.util.*
 
 
@@ -56,6 +57,19 @@ class DashBoardFragment : Fragment() {
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireActivity())
         getLocationPermission()
+        viewModel.weatherResponse.observe(viewLifecycleOwner, {
+            weatherProgressBar.isVisible = false
+            when (it) {
+                is Resource.Success -> {
+                    Log.d(TAG, "Success Data::${it.value}")
+                    updateUi(binding?.root?.rootView!!, it.value)
+                }
+                is Resource.Failure -> {
+                    Log.d(TAG, "Failure Data::${it.errorBody}")
+                    viewModel.getOfflineData()
+                }
+            }
+        })
     }
 
 
@@ -97,32 +111,32 @@ class DashBoardFragment : Fragment() {
                 if (task.isSuccessful) {
                     if (task.result != null) {
                         lastKnownLocation = task.result
-                        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-                        val addresses = geocoder.getFromLocation(
-                            lastKnownLocation.latitude,
-                            lastKnownLocation.longitude,
-                            1
-                        )
-                        val city = addresses[0].locality
-                        (activity as DashBoardActivity).supportActionBar?.title = city
-                        viewModel.getWeather(
-                            lastKnownLocation.latitude.toString(),
-                            lastKnownLocation.longitude.toString(),
-                            apiKey
-                        )
-                        viewModel.weatherResponse.observe(viewLifecycleOwner, {
+                        try {
+                            val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                            val addresses = geocoder.getFromLocation(
+                                lastKnownLocation.latitude,
+                                lastKnownLocation.longitude,
+                                1
+                            )
+                            val city = addresses[0].locality
+                            (activity as DashBoardActivity).supportActionBar?.title = city
+                            viewModel.getWeather(
+                                lastKnownLocation.latitude.toString(),
+                                lastKnownLocation.longitude.toString(),
+                                apiKey
+                            )
+                        } catch (ex: IOException) {
+                            val snackbar = Snackbar
+                                .make(
+                                    requireView(),
+                                    "Could Not Fetch Data Check your Internet",
+                                    Snackbar.LENGTH_LONG
+                                )
+                            snackbar.show()
                             weatherProgressBar.isVisible = false
-                            when (it) {
-                                is Resource.Success -> {
-                                    Log.d(TAG, "Success Data::${it.value}")
-                                    updateUi(binding?.root?.rootView!!, it.value)
-                                }
-                                is Resource.Failure -> {
-                                    Log.d(TAG, "Failure Data::${it.errorBody}")
-                                    noDataTetview.isVisible = true
-                                }
-                            }
-                        })
+                            noDataTetview.isVisible = true
+                        }
+
                     } else {
                         weatherProgressBar.isVisible = false
                         val snackbar = Snackbar
@@ -162,6 +176,9 @@ class DashBoardFragment : Fragment() {
             }
 
         } catch (e: SecurityException) {
+            Log.e("Exception: %s", e.message, e)
+            Toast.makeText(this.context, "Some exception occurred", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
             Log.e("Exception: %s", e.message, e)
             Toast.makeText(this.context, "Some exception occurred", Toast.LENGTH_SHORT).show()
         }

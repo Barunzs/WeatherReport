@@ -8,6 +8,7 @@ import com.barun.weather.data.repository.OpenWeatherRepository
 import com.barun.weather.data.response.Resource
 import com.barun.weather.data.response.weather.WeatherData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
@@ -28,6 +29,15 @@ class DashBoardViewModel @Inject constructor(val repository: OpenWeatherReposito
         app_id: String
     ) = viewModelScope.launch {
         _weatherResponse.value = repository.getWeather(lat, lon, app_id)
+    }
+
+    fun getOfflineData() {
+        viewModelScope.launch {
+            repository.getOfflineWeatherInfo().collect { result ->
+                _weatherResponse.value = result
+            }
+        }
+
     }
 }
 
