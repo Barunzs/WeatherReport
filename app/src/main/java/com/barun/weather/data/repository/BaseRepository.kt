@@ -1,7 +1,7 @@
 package com.barun.weather.data.repository
 
 import android.util.Log
-import com.barun.weather.data.response.weather.Resource
+import com.barun.weather.data.response.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException

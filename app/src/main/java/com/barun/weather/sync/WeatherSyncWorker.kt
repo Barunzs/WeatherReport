@@ -6,7 +6,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.barun.weather.data.repository.OpenBankRepository
-import com.barun.weather.data.response.weather.Resource
+import com.barun.weather.data.response.Resource
 import com.barun.weather.data.response.weather.WeatherData
 import com.google.android.gms.location.LocationServices
 import dagger.assisted.Assisted

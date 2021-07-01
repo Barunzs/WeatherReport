@@ -1,4 +1,4 @@
-package com.barun.weather.data.response.weather
+package com.barun.weather.data.response
 
 import okhttp3.ResponseBody
 
