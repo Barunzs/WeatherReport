@@ -18,31 +18,11 @@ class WeatherApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
 
-    private val pendingIntent by lazy {
-        PendingIntent.getBroadcast(
-            applicationContext,
-            1,
-            Intent(applicationContext, TriggerWorkerTaskReceiver::class.java),
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
 
-    private val alarmManager by lazy {
-        getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  5000L,(60 * 1000).toLong(), pendingIntent)
-    }
-
-    override fun onTerminate() {
-        super.onTerminate()
-        alarmManager.cancel(pendingIntent)
-    }
 }
